@@ -1,30 +1,17 @@
-/**
- * Download data from the specified URL.
- * @const apiUrl
- * @async
- * @function getApi
- * @param {string} url - The URL to download from.
- * @return {Promise<string>} The data from the URL.
- */
-
+// Je définie l'url de l'API
 const apiUrl = "http://localhost:3000/api/products";
 
+// Fontion pour réccupérer le bon url
 async function getApi(url) {
-    const dataPromise = window.fetch(url)
+    // Je définie une "promise" qui utilise la méthode fetch pour lire un url
+    const dataPromise = fetch(url)
+    // Puis quand tu as la "reponse" 
     .then((response) => {
+        // Si "reponse" ok alors tu formates en Json et tu renvoies la donnée
         if(response.ok) return response.json();
     })
-    .then((data) => data)
+    // Si non ok tu attrapes la "reponse" et tu renvoies message d'erreur 
     .catch(e => console.error(e.message));
+    // Tu mets fin à la fonction et tu renvoies la promise 
     return dataPromise;
 }
-
-// fetch('http://localhost:3000/api/products')
-//     .then(function (response) {
-//         return response.json()
-//     }).then(function (data) {
-//         console.log(data)
-//     })
-
-// fetch('http://localhost:3000/api/products/')
-//     .then(response => response.json()).then(console.log).then
