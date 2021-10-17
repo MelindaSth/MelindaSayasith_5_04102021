@@ -1,11 +1,11 @@
 // Je définie l'url du 'product'
 const urlProduct = new URL(window.location.href);
-console.log(urlProduct);
+// console.log(urlProduct);
 
 // Je définie l'url de l'API du 'product' qui est 'apiUrl' + / + l'id dans l'url de 'urlProduct'
 const apiUrlIdProduct = apiUrl + '/' + urlProduct.searchParams.get("id");
-console.log(apiUrlIdProduct);
-console.log(urlProduct.searchParams.get("id"));
+// console.log(apiUrlIdProduct);
+// console.log(urlProduct.searchParams.get("id"));
 
 // Fonction pour réccupérer le bon url de l'API 'product'
 async function getApiIdProduct() {
@@ -13,7 +13,7 @@ async function getApiIdProduct() {
     const apiProduct = await getApi(apiUrlIdProduct);
     // Tu exécutes la fonction 'productExposed'
     productExposed(apiProduct)
-    console.log(apiProduct);
+    // console.log(apiProduct);
 }
 
 // Tu éxécutes la fonction getApiProduct
@@ -33,24 +33,24 @@ function productExposed(apiProduct) {
 
     // Je défini le bloc imageProductElement qui correspond dans la page à l'élément avec une 'class name' "item__img" ciblée
     const imageProductElement = document.getElementsByClassName("item__img")[0];
-    console.log(imageProductElement)
+    // console.log(imageProductElement)
     // 'imageProductElement' est l'enfant de 'imageProduct' 
     imageProductElement.appendChild(imageProduct);
 
     // Je définie le 'title' du 'product' 
     const titleProduct = document.getElementById("title");
     titleProduct.textContent = apiProduct.name
-    console.log(titleProduct.textContent)
+    // console.log(titleProduct.textContent)
 
     // Je définie le 'price' du 'product' 
     const priceProduct = document.getElementById("price");
     priceProduct.textContent = apiProduct.price
-    console.log(priceProduct.textContent)
+    // console.log(priceProduct.textContent)
 
     // Je définie la description du 'product' 
     const descriptionProduct = document.getElementById("description");
     descriptionProduct.textContent = apiProduct.description
-    console.log(descriptionProduct.textContent)
+    // console.log(descriptionProduct.textContent)
 
     // Je définie les couleurs du 'product' 
     const selectColor = document.getElementById("colors");
@@ -59,7 +59,7 @@ function productExposed(apiProduct) {
         // Je crée une 'option' 
         const option = document.createElement("option");
         option.textContent = color;
-        console.log(option.textContent)
+        // console.log(option.textContent)
         // selectColor est l'enfant de 'option' 
         selectColor.appendChild(option);
     }
