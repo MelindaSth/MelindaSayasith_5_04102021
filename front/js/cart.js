@@ -1,10 +1,3 @@
-// Fonction qui crée le panier 
-function storageCart() {
-    // Je lui demande de stocker une donnée 
-    // Ici la donnée (l'objet) c'est 'cart' 
-    localStorage.setItem("cart");
-}
-
 // Définition de l'évènement au click pour l'ajout dans le panier 
 const button = document.getElementById("addToCart");
 button.addEventListener("click", addToCart);
@@ -26,9 +19,13 @@ function addToCart(event) {
     console.log(productAddToCart);
 }
 
+// Fonction qui crée le panier 
+function fillLocalStorageCart() {
+    localStorage.setItem('_id', "")
+}
+
 // Fonction qui réccupère les données dans le localStorage 
 function getStorageToCart() {
     // Je lui demande de réccupérer la donnée 'cart' 
     dataFromLocalStorage = localStorage.getItem("cart");
-    let cart;
 }
