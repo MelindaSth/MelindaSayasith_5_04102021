@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     itemCardExposed(await getApi(apiUrl));
 })
 
-console.log(apiUrl);
-
 // Fonction pour afficher les 'products' sur l'index 
 function itemCardExposed(products) {
     // Je définie 'itemCard'
