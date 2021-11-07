@@ -1,68 +1,42 @@
-let cart = JSON.parse(localStorage.getItem("cart"));
-
-for (currentCart of cart) {
-  console.log(currentCart);
+function displayCartProduct(cartContent, product) {
+  let itemCardToDisplay = document.querySelector("#cart__items");
+  itemCardToDisplay.innerHTML += `<article class="cart__item" data-id="${cartContent.id}" data-color="${cartContent.color}"/>
+                                  <div class="cart__item__img">
+                                  <img src="${product.imageUrl}" alt="${product.altTxt}">
+                                  </div>
+                                  <div class="cart__item__content">
+                                  <div class="cart__item__content__titlePrice">
+                                  <h2>${product.name}</h2>
+                                  <p>${product.price} €</p>
+                                  </div>
+                                  <div class="cart__item__content__settings">
+                                  <div class="cart__item__content__settings__quantity">
+                                  <p>Qté : </p>
+                                  <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cartContent.quantity}">
+                                  </div>
+                                  <div class="cart__item__content__settings__delete">
+                                  <p class="deleteItem">Supprimer</p>
+                                  </div>
+                                  </div>
+                                  </div>
+                                  </article>`
 }
 
-function displayProductInLocalStorage(currentCart, product) {
-  document.title = 'Panier';
-  
-  let htmlCart = "";
-  let html;
-  const detailsCart = JSON.parse(localStorage.getItem("cart"));
-  console.log(detailsCart);
-  for (var i = 0; i < cart.length; i++) {
-  html = `<article class="cart__item" data-id="${currentCart.id}" data-color="${currentCart.color}"/>
-            <div class="cart__item__img">
-              <img src="${product[i].imageUrl}" alt="${product[i].altTxt}">
-            </div>
-            <div class="cart__item__content">
-              <div class="cart__item__content__titlePrice">
-                  <h2>${product[i].name}</h2>
-                  <p>${product[i].price} €</p>
-              </div>
-                <div class="cart__item__content__settings">
-                  <div class="cart__item__content__settings__quantity">
-                    <p>Qté : </p>
-                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${currentCart.quantity}">
-                  </div>
-                <div class="cart__item__content__settings__delete">
-                    <p class="deleteItem">Supprimer</p>
-                </div>
-              </div>
-            </div>
-          </article>`
-          htmlCart += html; 
-  }
-  let cartElement = document.querySelector("#cart__items");
-  cartElement.innerHTML = htmlCart;
-
-  let btnDelete = document.querySelector(".deleteItem");
-  btnDelete.addEventListener("click", deleteItem);
-
-  function deleteItem(event) {
-    const article = event.target.closest("article");
-    const id = article.getAttribute("data-id");
-    const color = article.getAttribute("data-color");
-
-    let cart = JSON.parse(localStorage.getItem("cart"));
-    let testFind = cart.findIndex(el => el.id == id && el.color == color);
-    console.log("La position de cet élément est ", testFind);
-    if (testFind) {
-      const sectionToFocus = document.getElementById('cart__items');
-        sectionToFocus.removeChild(article);
-    }
-  }
+let cart = localStorage.getItem("cart");
+if (cart) {
+  cart = JSON.parse(cart);
+  // console.log(cart);
 }
-
-fetch("http://localhost:3000/api/products/")
+cart.forEach(cartContent => {
+  fetch("http://localhost:3000/api/products/" + cartContent.id)
   .then((response) => {
-    if (response.ok) return response.json();
+  if (response.ok) return response.json();
   })
   .then(function(product) {
-    displayProductInLocalStorage(currentCart, product);
-    return product;
+  // console.log(product);
+  displayCartProduct(cartContent, product);
   })
   .catch(function(e) {
-    console.error(e.message);
+  console.error(e.message);
   })
+});

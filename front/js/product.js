@@ -43,7 +43,7 @@ function displayDetailsProduct(product) {
 }
 
 // Fonction qui crée le panier 
-function saveProductDetailsForCart() {
+function saveProductDetailsForCart(product) {
   // Je définie l'objet dans lequel je retrouve l'id, la couleur et la quantité 
   let userChoiceArray = {
   id: getCurrentIdProduct(),
@@ -88,6 +88,7 @@ function addToCartOnClick() {
   if (currentCart) {
     // cart = à currentCart formaté en JS
     cart = JSON.parse(currentCart);
+
     // Je renvoie l'indice du 1er élément de mon objet [cart] avec une condition, ici id & couleur = exactement les mêmes 
     let test = cart.findIndex(el => el.id == currentProduct.id && el.color == currentProduct.color);
     console.log("La position de cet élément est ", test); // Renvoie l'indice (position) / Si la fonction renvoie faux alors le résultat vaut -1
@@ -102,6 +103,8 @@ function addToCartOnClick() {
       console.log("Vous avez ajouté un nouveau canapé dans votre panier");
       cart.push(currentProduct);
     }
+
+
   } else {
   // 'cart' n'existe pas alors je push dans 'cart' 'currentProduct'
   cart.push(currentProduct);
@@ -119,6 +122,7 @@ fetch("http://localhost:3000/api/products/" + getCurrentIdProduct())
   })
   .then(function(product) {
     displayDetailsProduct(product);
+    return product;
   })
   .catch(function(e) {
     console.error(e.message);
