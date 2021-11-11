@@ -73,12 +73,6 @@ function saveProductDetailsForCart(product) {
   return userChoiceArray;
 }
 
-// Fonction localStorage setItem
-function setCart(cart) {
-localStorage.setItem("cart", JSON.stringify(cart));
-alert("le produit a bien été ajouté au panier");
-}
-
 // Fonction pour ajouter au panier
 function addToCartOnClick() {
   const currentProduct = saveProductDetailsForCart();
