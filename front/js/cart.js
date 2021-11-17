@@ -97,27 +97,27 @@ function calculateTotalPriceQuantity() {
   // children = renvoie tout les enfants de l'élément
   const sectionItems = document.getElementById("cart__items").children;
 
-  for (const article of sectionItems) {
+  for (const article of sectionItems) { 
     // Number(valeur) ici value de l'input ayant pour className "itemQuantity" 
-    const quantity = Number(document.getElementsByClassName("itemQuantity")[0].value);
+    const quantity = Number(article.querySelector(".itemQuantity").value); 
     // console.log(quantity);
-    // 0 = 0 + quantity
+    
     totalQuantityProduct = totalQuantityProduct + quantity;
-    // console.log(totalQuantity);
+    // console.log(totalQuantityProduct);
 
     // Number(valeur) ici l'attribut data-price de l'article
-    const priceProduct = Number(article.getAttribute("data-price"));;
+    const priceProduct = Number(article.getAttribute("data-price"));
     // console.log(priceProduct);
 
     // Je réccupère l'élément dans html
-    const priceContent = article.getElementsByClassName("item__price")[0];
+    const priceContent = article.querySelector(".item__price");
     // console.log(priceContent);
 
     // textContent de priceContent devient quantity * priceProduct + " € EUR" // 2 x 10 = 20 € EUR
     priceContent.textContent = quantity * priceProduct + " € EUR";
     // console.log(priceContent.textContent);
-    // 0 = 10 x 2 
-    totalAmountPrice = priceProduct * quantity;
+    
+    totalAmountPrice = totalAmountPrice + quantity * priceProduct;
     // console.log(totalAmountPrice);
   }
   // textContent de #totalQuantity et #totalPrice = résultats
@@ -125,22 +125,32 @@ function calculateTotalPriceQuantity() {
   document.querySelector("#totalPrice").textContent = totalAmountPrice;
 }
 
+
 let cart = localStorage.getItem("cart");
 if (cart) {
   cart = JSON.parse(cart);
 }
 
-cart.forEach(cartContent => {
-  fetch("http://localhost:3000/api/products/" + cartContent.id)
-  .then((response) => {
-  if (response.ok) return response.json();
-  })
-  .then(function(product) {
-  // console.log(product);
-  displayCartProduct(cartContent, product);
+async function forEachContent() {
+  cart.forEach(cartContent => { 
+    fetch("http://localhost:3000/api/products/" + cartContent.id)
+    .then((response) => {
+    if (response.ok) return response.json();
+    })
+    .then(function(product) {
+    // console.log(product);
+    displayCartProduct(cartContent, product);
+    calculateTotalPriceQuantity();
+    })
+    .catch(function(e) {
+    console.error(e.message);
+    })
+  });
+}
+
+async function loadPage() {
+  await forEachContent();
   calculateTotalPriceQuantity();
-  })
-  .catch(function(e) {
-  console.error(e.message);
-  })
-});
+}
+
+loadPage();
