@@ -129,6 +129,10 @@ function calculateTotalPriceQuantity() {
 let cart = localStorage.getItem("cart");
 if (cart) {
   cart = JSON.parse(cart);
+} else {
+  console.log("le cart est vide")
+  alert('Votre panier est vide, retour à la page d\'accueil pour faire votre choix');
+  document.location.href = `index.html`;
 }
 
 async function forEachContent() {

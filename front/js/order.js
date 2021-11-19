@@ -6,7 +6,7 @@
 // vérification = vrai ou faux, si faux = renvoyer un message d'erreur 
 
 function firstNameCheck() {
-    
+    let firstName = document.querySelector("#firstName");
     let firstNameValue = firstName.value;
     // ^ = début de chaîne de caractères ; $ = fin de chaîne de caractères, ici caractères autorisés 
     let firstNameRegex = /^[A-Za-záÁàÀâÂäÄãÃåÅæÆçÇéÉèÈêÊëËíÍìÌîÎïÏñÑóÓòÒôÔöÖõÕøØœŒßúÚùÙûÛüÜ -]+$/;
@@ -78,7 +78,7 @@ city.addEventListener("input", cityCheck);
 function emailCheck() {
     let email = document.querySelector("#email");
     let emailValue = email.value;
-    
+    let emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/; // ne limite plus les ext de dom // fct generique parametre = nom de champ également pour lemail :)
     let emailErrorMsg = document.querySelector("#emailErrorMsg");
 
     if (emailValue == "") {
@@ -138,7 +138,7 @@ function saveOrder(data) {
         if (response.ok) return response.json();
     })
     .then((data) => {
-        // renvoie vers la page de confirmation avec l'orderId
+        // renvoie vers la page de confirmation avec l'idOrder
         document.location.href = `confirmation.html?order=${data.orderId}`;
     })
     // Si non ok tu attrapes la "reponse" et tu renvoies message d'erreur 
