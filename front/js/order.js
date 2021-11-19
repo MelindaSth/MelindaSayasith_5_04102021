@@ -6,7 +6,7 @@
 // vérification = vrai ou faux, si faux = renvoyer un message d'erreur 
 
 function firstNameCheck() {
-    let firstName = document.querySelector("#firstName");
+    
     let firstNameValue = firstName.value;
     // ^ = début de chaîne de caractères ; $ = fin de chaîne de caractères, ici caractères autorisés 
     let firstNameRegex = /^[A-Za-záÁàÀâÂäÄãÃåÅæÆçÇéÉèÈêÊëËíÍìÌîÎïÏñÑóÓòÒôÔöÖõÕøØœŒßúÚùÙûÛüÜ -]+$/;
@@ -21,7 +21,6 @@ function firstNameCheck() {
         firstNameErrorMsg.textContent = "";
         return firstNameValue;
     }
-    //return false;
 }
 firstName.addEventListener("input", firstNameCheck);
 
@@ -37,9 +36,8 @@ function lastNameCheck() {
         lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffre";
     } else {
         lastNameErrorMsg.textContent = "";
-        return lastNameErrorMsg;
+        return lastNameValue;
     }
-    //return false;
 }
 lastName.addEventListener("input", lastNameCheck);
 
@@ -57,7 +55,6 @@ function addressCheck() {
         addressErrorMsg.textContent = "";
         return addressValue;
     }
-    //return false;
 }
 address.addEventListener("input", addressCheck);
 
@@ -75,14 +72,13 @@ function cityCheck() {
         cityErrorMsg.textContent = "";
         return cityValue;
     }
-    //return false;
 }
 city.addEventListener("input", cityCheck);
 
 function emailCheck() {
     let email = document.querySelector("#email");
     let emailValue = email.value;
-    let emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/;
+    
     let emailErrorMsg = document.querySelector("#emailErrorMsg");
 
     if (emailValue == "") {
@@ -93,11 +89,10 @@ function emailCheck() {
         emailErrorMsg.textContent = "";
         return emailValue;
     }
-    //return false;
 }
 email.addEventListener("input", emailCheck);
 
-function placeOrder(event) {
+function placeOrder() {
     const firstName = firstNameCheck();
     const lastName = lastNameCheck();
     const address = addressCheck();
@@ -105,11 +100,47 @@ function placeOrder(event) {
     const email = emailCheck();
 
     if (firstName && lastName && address && city && email) {
-        console.log("Le formulaire est complet");
+
+    let allIdProductInOrder = cart.map((cart)=> {
+        return cart.id;
+    })
+
+    const data = {contact : {firstName, lastName, address, city, email,}, products: allIdProductInOrder};
+
+    saveOrder(data);
+
     } else {
         console.log("Le formulaire est incomplet");
     }
 }
 
 const submitBtn = document.querySelector("#order");
-submitBtn.addEventListener("click", placeOrder);
+submitBtn.addEventListener("click", function(event) {
+    // Au 'click' tu ne poursuit pas ta fonction native (html), tu appliques JS
+    event.preventDefault();
+    placeOrder();
+});
+
+function saveOrder(data) {
+    // J'interroge l'API
+    fetch("http://localhost:3000/api/products/order", {
+        // Method POST pour envoyer les données
+        method: "POST",
+        headers: {
+            // J'indique que ce sont des données format json
+            Accept: "application/json",
+            "Content-Type": "application/json",
+    },
+    // transforme le 'corps de la requête' de données au format json
+    body: JSON.stringify(data),
+    })
+    .then((response) => {
+        if (response.ok) return response.json();
+    })
+    .then((data) => {
+        // renvoie vers la page de confirmation avec l'orderId
+        document.location.href = `confirmation.html?order=${data.orderId}`;
+    })
+    // Si non ok tu attrapes la "reponse" et tu renvoies message d'erreur 
+    .catch(e => console.error(e.message));
+}
