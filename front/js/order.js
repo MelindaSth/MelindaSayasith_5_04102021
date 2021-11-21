@@ -1,9 +1,5 @@
-// Etape 10 : passer la commande
-// Regex = expressions rationnelles en JS ou expressions régulières
-// Permet de vérifier la présence de certains caractères ou suites de caractères ds une expression
-
 // Quand mon user change l'input (évènement), on réccupère ce qu'il a écrit et on le vérifie
-// vérification = vrai ou faux, si faux = renvoyer un message d'erreur 
+// vérification = vrai ou faux, si faux = renvoyer un message d'erreur
 
 function firstNameCheck() {
     let firstName = document.querySelector("#firstName");
@@ -78,7 +74,7 @@ city.addEventListener("input", cityCheck);
 function emailCheck() {
     let email = document.querySelector("#email");
     let emailValue = email.value;
-    let emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/; // ne limite plus les ext de dom // fct generique parametre = nom de champ également pour lemail :)
+    let emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/;
     let emailErrorMsg = document.querySelector("#emailErrorMsg");
 
     if (emailValue == "") {
@@ -101,6 +97,7 @@ function placeOrder() {
 
     if (firstName && lastName && address && city && email) {
 
+    // Methode map qui crée un nouveau tableau avec les résultats de l'appel d'une fonction
     let allIdProductInOrder = cart.map((cart)=> {
         return cart.id;
     })
