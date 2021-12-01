@@ -1,16 +1,13 @@
-// Quand mon user change l'input (évènement), on réccupère ce qu'il a écrit et on le vérifie
-// vérification = vrai ou faux, si faux = renvoyer un message d'erreur
+// Fonction pour vérifier les chaînes de caractères 
 
 function firstNameCheck() {
     let firstName = document.querySelector("#firstName");
     let firstNameValue = firstName.value;
-    // ^ = début de chaîne de caractères ; $ = fin de chaîne de caractères, ici caractères autorisés 
     let firstNameRegex = /^[A-Za-záÁàÀâÂäÄãÃåÅæÆçÇéÉèÈêÊëËíÍìÌîÎïÏñÑóÓòÒôÔöÖõÕøØœŒßúÚùÙûÛüÜ -]+$/;
     let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
     if (firstNameValue == "") {
         firstNameErrorMsg.textContent = "Veuillez renseigner votre prénom";
-        // Sinon si la méthode test() est fausse  
     } else if (!firstNameRegex.test(firstNameValue)) {
         firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffre";
     } else {
@@ -97,14 +94,13 @@ function placeOrder() {
 
     if (firstName && lastName && address && city && email) {
 
-    // Methode map qui crée un nouveau tableau avec les résultats de l'appel d'une fonction
-    let allIdProductInOrder = cart.map((cart)=> {
-        return cart.id;
-    })
+        let allIdProductInOrder = cart.map((cart) => {
+            return cart.id;
+        })
 
-    const data = {contact : {firstName, lastName, address, city, email,}, products: allIdProductInOrder};
+        const data = { contact: { firstName, lastName, address, city, email, }, products: allIdProductInOrder };
 
-    saveOrder(data);
+        saveOrder(data);
 
     } else {
         console.log("Le formulaire est incomplet");
@@ -112,32 +108,27 @@ function placeOrder() {
 }
 
 const submitBtn = document.querySelector("#order");
-submitBtn.addEventListener("click", function(event) {
-    // Au 'click' tu ne poursuit pas ta fonction native (html), tu appliques JS
+submitBtn.addEventListener("click", function (event) {
     event.preventDefault();
     placeOrder();
 });
 
+// Fonction pour sauvegarder la commande 
+
 function saveOrder(data) {
-    // J'interroge l'API
     fetch("http://localhost:3000/api/products/order", {
-        // Method POST pour envoyer les données
         method: "POST",
         headers: {
-            // J'indique que ce sont des données format json
             Accept: "application/json",
             "Content-Type": "application/json",
-    },
-    // transforme le 'corps de la requête' de données au format json
-    body: JSON.stringify(data),
+        },
+        body: JSON.stringify(data),
     })
-    .then((response) => {
-        if (response.ok) return response.json();
-    })
-    .then((data) => {
-        // renvoie vers la page de confirmation avec l'idOrder
-        document.location.href = `confirmation.html?order=${data.orderId}`;
-    })
-    // Si non ok tu attrapes la "reponse" et tu renvoies message d'erreur 
-    .catch(e => console.error(e.message));
+        .then((response) => {
+            if (response.ok) return response.json();
+        })
+        .then((data) => {
+            document.location.href = `confirmation.html?order=${data.orderId}`;
+        })
+        .catch(e => console.error(e.message));
 }

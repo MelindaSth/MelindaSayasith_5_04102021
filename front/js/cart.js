@@ -1,3 +1,5 @@
+// Fonction pour afficher les produits dans le panier
+
 function displayCartProduct(cartContent, product) {
   document.title = 'Panier';
 
@@ -23,104 +25,71 @@ function displayCartProduct(cartContent, product) {
                                   </div>
                                   </article>`
 
-  // Je fais une boucle pour appliqué l'évènement sur l'ensemble des boutons 'supprimer'
   let btnDelete = document.querySelectorAll(".deleteItem");
   for (let i = 0; i < btnDelete.length; i++) {
     btnDelete[i].addEventListener('click', deleteContentCart);
   }
 
-  // Supprimer un élément au 'click'
+  // Fonction pour le bouton supprimer
 
   function deleteContentCart(event) {
-    // event.target se réfère à l'élément 'article' cliqué
-    // closest() renvoie l'ancêtre le + proche de l'élément "article"
     const articleToDelete = event.target.closest("article");
-    // Je définie id & color en allant chercher les infos dans l'html 
     const id = articleToDelete.getAttribute("data-id");
     const color = articleToDelete.getAttribute("data-color");
 
-    // Je réccupère mon 'cart'
     getCart();
 
-    // cart = filtre 'cart' et renvoie un nouveau tableau, il faut que le contenu (id + couleur) soient différent que l'élément ciblé 
     cart = cart.filter((cartContent) => !(cartContent.id === id && cartContent.color === color));
     const sectionCartItems = document.getElementById("cart__items");
-    // J'efface au click l'élément ciblé 
     sectionCartItems.removeChild(articleToDelete);
 
-    // MAJ du localStorage
     setCart(cart);
-    // MAJ des calcules prix et quantité
     calculateTotalPriceQuantity();
   }
 
-  // Je fais une boucle pour appliqué l'évènement sur l'ensemble des boutons des 'input'
   let inputQuantity = document.querySelectorAll(".itemQuantity");
   for (let i = 0; i < inputQuantity.length; i++) {
-    // 'change' est déclenché pour les input, lors d'un changement de valeur est réalisé par l'user
     inputQuantity[i].addEventListener('change', changeQuantityCart);
   }
 
-    // Changement de Quantité
+  // Fonction pour le changement de quantité
 
   function changeQuantityCart(event) {
-    // event.target se réfère à l'élément 'article' cliqué
-    // closest() renvoie l'ancêtre le + proche de l'élément "article"
-    // Je définie id & color en allant chercher les infos dans l'html 
     const id = event.target.closest("article").getAttribute("data-id");
     const color = event.target.closest("article").getAttribute("data-color");
 
-    // Je réccupère mon 'cart'
     getCart();
 
     for (const cartContent of cart) {
-      // Si l'id + color de cartContent sont === à l'id + color de html
       if (cartContent.id === id && cartContent.color === color) {
-        // Alors la quantité de cartContent === la valeur de l'input ciblé lors de l'évènement 
         cartContent.quantity = event.target.value;
       }
     }
-    // MAJ du localStorage
     setCart(cart);
-    // MAJ des calcules prix et quantité
     calculateTotalPriceQuantity();
   }
 }
 
-// Je calcule les quantités au total et les prix 
+// Fonction pour calculer les quantités et les prix 
 
 function calculateTotalPriceQuantity() {
-  // Je définie en 'nombre' ce que je souhaite afficher
   let totalQuantityProduct = 0;
   let totalAmountPrice = 0;
 
-  // children = renvoie tout les enfants de l'élément
   const sectionItems = document.getElementById("cart__items").children;
 
-  for (const article of sectionItems) { 
-    // Number(valeur) ici value de l'input ayant pour className "itemQuantity" 
-    const quantity = Number(article.querySelector(".itemQuantity").value); 
-    // console.log(quantity);
-    
+  for (const article of sectionItems) {
+    const quantity = Number(article.querySelector(".itemQuantity").value);
+
     totalQuantityProduct = totalQuantityProduct + quantity;
-    // console.log(totalQuantityProduct);
 
-    // Number(valeur) ici l'attribut data-price de l'article
     const priceProduct = Number(article.getAttribute("data-price"));
-    // console.log(priceProduct);
-
-    // Je réccupère l'élément dans html
     const priceContent = article.querySelector(".item__price");
-    // console.log(priceContent);
 
-    // textContent de priceContent devient quantity * priceProduct + " € EUR" // 2 x 10 = 20 € EUR
     priceContent.textContent = quantity * priceProduct + " € EUR";
-    // console.log(priceContent.textContent);
-    
+
     totalAmountPrice = totalAmountPrice + quantity * priceProduct;
-    // console.log(totalAmountPrice);
   }
-  // textContent de #totalQuantity et #totalPrice = résultats
   document.querySelector("#totalQuantity").textContent = totalQuantityProduct;
   document.querySelector("#totalPrice").textContent = totalAmountPrice;
 }
@@ -136,19 +105,18 @@ if (cart) {
 }
 
 async function forEachContent() {
-  cart.forEach(cartContent => { 
+  cart.forEach(cartContent => {
     fetch("http://localhost:3000/api/products/" + cartContent.id)
-    .then((response) => {
-    if (response.ok) return response.json();
-    })
-    .then(function(product) {
-    // console.log(product);
-    displayCartProduct(cartContent, product);
-    calculateTotalPriceQuantity();
-    })
-    .catch(function(e) {
-    console.error(e.message);
-    })
+      .then((response) => {
+        if (response.ok) return response.json();
+      })
+      .then(function (product) {
+        displayCartProduct(cartContent, product);
+        calculateTotalPriceQuantity();
+      })
+      .catch(function (e) {
+        console.error(e.message);
+      })
   });
 }
 
